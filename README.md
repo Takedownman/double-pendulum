@@ -1,26 +1,44 @@
 # Double Pendulum
 
-A high-quality double pendulum simulation that demonstrates deterministic chaos and sensitive dependence on initial conditions.
+High-accuracy simulation of a chaotic double pendulum using the exact Lagrangian equations of motion.
 
-Built using the exact Lagrangian equations of motion, with energy conservation tracking and a side-by-side comparison of two nearly identical systems.
+This project demonstrates deterministic chaos and sensitive dependence on initial conditions by integrating two nearly identical systems side-by-side (differing by only 10 µrad).
 
 **Made by Takedownman**
 
 ---
 
-### What this project shows
+### Features
 
-This simulation integrates the full nonlinear equations of a double pendulum and visualizes how a tiny difference in starting angle (10 micro-radians) grows into completely different trajectories.  
-
-It also tracks total energy over time to confirm the numerical integration remains faithful to the underlying physics.
-
-**Key features:**
 - Exact Lagrangian equations of motion
-- Two pendulums started with a 10 µrad difference
-- Real-time visualization of chaotic divergence
+- Dual trajectory comparison (10 micro-radian perturbation)
 - Energy conservation diagnostic
-- Clean dark academic-style plots
-- High-quality animation output
+- Exponential divergence visualization
+- Clean dark academic-style animation
+- High-quality MP4 output
+
+---
+
+### Core Equations
+
+The system is derived from the Lagrangian \(\mathcal{L} = T - V\). The equations of motion are integrated as a first-order system:
+
+```python
+def deriv(y, t, L1, L2, m1, m2):
+    θ1, ω1, θ2, ω2 = y
+    c = np.cos(θ1 - θ2)
+    s = np.sin(θ1 - θ2)
+    den = m1 + m2 * s**2
+
+    ω1dot = (m2*g*np.sin(θ2)*c
+             - m2*s*(L1*ω1**2*c + L2*ω2**2)
+             - (m1+m2)*g*np.sin(θ1)) / (L1 * den)
+
+    ω2dot = ((m1+m2)*(L1*ω1**2*s - g*np.sin(θ2)
+                      + g*np.sin(θ1)*c)
+             + m2*L2*ω2**2*s*c) / (L2 * den)
+
+    return [ω1, ω1dot, ω2, ω2dot]
 
 ---
 
